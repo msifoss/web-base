@@ -211,7 +211,7 @@ class SetupWizard {
   }
 
   // CSP Integration - Extract data from existing website
-  private async extractFromWebsite(url: string): Promise<Partial<SetupData> | null> {
+  private async extractFromWebsite(url: string): Promise<{ data: Partial<SetupData>; confidence: Record<string, number> } | null> {
     this.printInfo('Extracting data from website...');
 
     // Find CSP installation
@@ -223,7 +223,7 @@ class SetupWizard {
 
     let cspPath = '';
     for (const p of cspPaths) {
-      if (fs.existsSync(path.join(p, 'csp.py'))) {
+      if (fs.existsSync(path.join(p, 'csp', 'cli.py'))) {
         cspPath = p;
         break;
       }
@@ -241,7 +241,7 @@ class SetupWizard {
       // Run CSP extract command
       this.print(`  Crawling ${url}...`, colors.dim);
       execSync(
-        `python csp.py extract "${url}" --no-playwright -o "${outputFile}"`,
+        `python -c "from csp.cli import main; main()" extract "${url}" --no-playwright -o "${outputFile}"`,
         { cwd: cspPath, stdio: 'pipe', timeout: 120000 }
       );
 
@@ -261,7 +261,7 @@ class SetupWizard {
           },
           contact: {
             email: extracted.contact?.email || '',
-            phone: extracted.contact?.phone || '',
+            phone: this.formatPhone(extracted.contact?.phone || ''),
             phoneRaw: extracted.contact?.phone_raw || '',
             address: {
               street: extracted.contact?.address?.street || '',
@@ -291,19 +291,170 @@ class SetupWizard {
 
         this.printSuccess('Data extracted successfully!');
 
-        // Show what was found
-        if (mapped.business?.name) this.print(`  • Business: ${mapped.business.name}`, colors.dim);
-        if (mapped.contact?.phone) this.print(`  • Phone: ${mapped.contact.phone}`, colors.dim);
-        if (mapped.contact?.email) this.print(`  • Email: ${mapped.contact.email}`, colors.dim);
-        if (mapped.branding?.primaryColor) this.print(`  • Primary Color: ${mapped.branding.primaryColor}`, colors.dim);
-
-        return mapped;
+        return {
+          data: mapped,
+          confidence: extracted.confidence || {},
+        };
       }
     } catch (error) {
       this.printWarning('Could not extract data from website. Continuing with manual entry.');
     }
 
     return null;
+  }
+
+  // Format phone number
+  private formatPhone(phone: string): string {
+    const digits = phone.replace(/\D/g, '');
+    if (digits.length === 10) {
+      return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`;
+    } else if (digits.length === 11 && digits.startsWith('1')) {
+      return `(${digits.slice(1, 4)}) ${digits.slice(4, 7)}-${digits.slice(7)}`;
+    }
+    return phone;
+  }
+
+  // Confirm extracted value with override option
+  private async confirmValue(
+    label: string,
+    value: string,
+    confidence: number = 0,
+    placeholder: string = ''
+  ): Promise<string> {
+    const confStr = confidence > 0 ? ` ${colors.dim}(${Math.round(confidence * 100)}% confident)${colors.reset}` : '';
+    const current = value || placeholder;
+
+    if (!current) {
+      return await this.prompt(`${label}`, placeholder);
+    }
+
+    const display = current.length > 50 ? current.substring(0, 47) + '...' : current;
+    return await this.prompt(`${label}${confStr}\n  ${colors.green}→${colors.reset} [${display}]`, current);
+  }
+
+  // Review and confirm extracted data
+  private async reviewExtractedData(
+    extracted: { data: Partial<SetupData>; confidence: Record<string, number> }
+  ) {
+    this.printHeader('Review Extracted Data');
+    this.printInfo('Press Enter to keep the extracted value, or type a new value to override.\n');
+
+    const { data, confidence } = extracted;
+
+    // Business info
+    console.log(`${colors.cyan}${colors.bright}Business Information${colors.reset}`);
+    this.data.business.name = await this.confirmValue(
+      'Business name',
+      data.business?.name || '',
+      confidence.business_name,
+      defaults.business.name
+    );
+
+    this.data.business.tagline = await this.confirmValue(
+      'Tagline',
+      data.business?.tagline || '',
+      0,
+      defaults.business.tagline
+    );
+
+    this.data.business.description = await this.confirmValue(
+      'Description',
+      data.business?.description || '',
+      confidence.description,
+      `${this.data.business.name} provides professional services and solutions.`
+    );
+
+    // Contact info
+    console.log(`\n${colors.cyan}${colors.bright}Contact Information${colors.reset}`);
+    this.data.contact.email = await this.confirmValue(
+      'Email',
+      data.contact?.email || '',
+      confidence.email,
+      defaults.contact.email
+    );
+
+    this.data.contact.phone = await this.confirmValue(
+      'Phone',
+      data.contact?.phone || '',
+      confidence.phone,
+      defaults.contact.phone
+    );
+    this.data.contact.phoneRaw = '+1' + this.data.contact.phone.replace(/\D/g, '');
+
+    // Address (if found)
+    if (data.contact?.address?.street) {
+      console.log(`\n${colors.cyan}${colors.bright}Address${colors.reset}`);
+      this.data.contact.address.street = await this.confirmValue(
+        'Street',
+        data.contact.address.street,
+        confidence.address
+      );
+      this.data.contact.address.city = await this.confirmValue(
+        'City',
+        data.contact.address.city || '',
+        confidence.address
+      );
+      this.data.contact.address.state = await this.confirmValue(
+        'State',
+        data.contact.address.state || '',
+        confidence.address
+      );
+      this.data.contact.address.zip = await this.confirmValue(
+        'ZIP',
+        data.contact.address.zip || '',
+        confidence.address
+      );
+    }
+
+    // Social media
+    const socialCount = [
+      data.social?.facebook,
+      data.social?.instagram,
+      data.social?.linkedin,
+      data.social?.youtube,
+      data.social?.twitter,
+    ].filter(Boolean).length;
+
+    if (socialCount > 0) {
+      console.log(`\n${colors.cyan}${colors.bright}Social Media (${socialCount} found)${colors.reset}`);
+
+      if (data.social?.facebook) {
+        this.data.social.facebook = await this.confirmValue('Facebook', data.social.facebook, confidence.social);
+      }
+      if (data.social?.instagram) {
+        this.data.social.instagram = await this.confirmValue('Instagram', data.social.instagram, confidence.social);
+      }
+      if (data.social?.linkedin) {
+        this.data.social.linkedin = await this.confirmValue('LinkedIn', data.social.linkedin, confidence.social);
+      }
+      if (data.social?.youtube) {
+        this.data.social.youtube = await this.confirmValue('YouTube', data.social.youtube, confidence.social);
+      }
+      if (data.social?.twitter) {
+        this.data.social.twitter = await this.confirmValue('Twitter/X', data.social.twitter, confidence.social);
+      }
+    }
+
+    // Branding/Colors
+    console.log(`\n${colors.cyan}${colors.bright}Brand Colors${colors.reset}`);
+    this.data.branding.primaryColor = await this.confirmValue(
+      'Primary color',
+      data.branding?.primaryColor || '',
+      confidence.colors,
+      defaults.branding.primaryColor
+    );
+    this.data.branding.secondaryColor = await this.confirmValue(
+      'Secondary color',
+      data.branding?.secondaryColor || '',
+      confidence.colors,
+      defaults.branding.secondaryColor
+    );
+    this.data.branding.accentColor = await this.confirmValue(
+      'Accent color',
+      data.branding?.accentColor || '',
+      confidence.colors,
+      defaults.branding.accentColor
+    );
   }
 
   // Collect business information
@@ -636,36 +787,77 @@ Have questions? We'd love to hear from you! [Contact us](/contact) today.
 
     // Ask about existing website
     const hasExistingSite = await this.promptYesNo('Do you have an existing website to import data from?', false);
+    let usedExtraction = false;
 
     if (hasExistingSite) {
       const existingUrl = await this.prompt('Enter the website URL (e.g., https://oldsite.com)', '');
       if (existingUrl) {
         const extracted = await this.extractFromWebsite(existingUrl);
         if (extracted) {
-          // Merge extracted data with defaults
-          this.data = {
-            ...this.data,
-            ...extracted,
-            business: { ...this.data.business, ...extracted.business },
-            contact: {
-              ...this.data.contact,
-              ...extracted.contact,
-              address: { ...this.data.contact.address, ...extracted.contact?.address }
-            },
-            social: { ...this.data.social, ...extracted.social },
-            branding: { ...this.data.branding, ...extracted.branding },
-          };
+          usedExtraction = true;
+          // Review and confirm extracted data with override options
+          await this.reviewExtractedData(extracted);
         }
       }
     }
 
-    // Collect/confirm information
-    await this.collectBusinessInfo();
-    await this.collectSiteInfo();
-    await this.collectContactInfo();
-    await this.collectSocialMedia();
-    await this.collectBranding();
-    await this.collectCTA();
+    if (usedExtraction) {
+      // Only collect missing info after extraction
+      this.printHeader('Additional Information');
+
+      // Legal name (not extracted)
+      this.data.business.legalName = await this.prompt(
+        'Legal business name (for contracts)',
+        this.data.business.name
+      );
+
+      // Year founded (not reliably extracted)
+      const yearInput = await this.prompt('Year founded', String(new Date().getFullYear()));
+      this.data.business.yearFounded = parseInt(yearInput) || new Date().getFullYear();
+
+      // Site URL
+      await this.collectSiteInfo();
+
+      // Address if not extracted
+      if (!this.data.contact.address.street) {
+        const wantAddress = await this.promptYesNo('Add a physical address?', false);
+        if (wantAddress) {
+          this.data.contact.address.street = await this.prompt('Street address', '');
+          if (this.data.contact.address.street) {
+            this.data.contact.address.city = await this.prompt('City', '');
+            this.data.contact.address.state = await this.prompt('State', '');
+            this.data.contact.address.zip = await this.prompt('ZIP code', '');
+          }
+        }
+      }
+
+      // Additional social media not found
+      const addMoreSocial = await this.promptYesNo('Add more social media links?', false);
+      if (addMoreSocial) {
+        if (!this.data.social.facebook) {
+          this.data.social.facebook = await this.prompt('Facebook URL', '');
+        }
+        if (!this.data.social.instagram) {
+          this.data.social.instagram = await this.prompt('Instagram URL', '');
+        }
+        if (!this.data.social.linkedin) {
+          this.data.social.linkedin = await this.prompt('LinkedIn URL', '');
+        }
+        this.data.social.yelp = await this.prompt('Yelp URL', '');
+        this.data.social.googleBusiness = await this.prompt('Google Business URL', '');
+      }
+
+      // CTA
+      await this.collectCTA();
+    } else {
+      // Full manual collection
+      await this.collectBusinessInfo();
+      await this.collectSiteInfo();
+      await this.collectContactInfo();
+      await this.collectSocialMedia();
+      await this.collectBranding();
+      await this.collectCTA();
+    }
 
     // Generate files
     this.printHeader('Generating Files');
