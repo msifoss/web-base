@@ -36,6 +36,10 @@ backup/
 # Form submissions (sensitive data)
 data/submissions.json
 
+# Extracted website data (from setup wizard)
+extracted_data.json
+.extracted_data.json
+
 # Local config overrides (per-server settings)
 config.local.yaml
 
