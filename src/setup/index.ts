@@ -178,6 +178,29 @@ class SetupWizard {
     });
   }
 
+  // Prompt for longer text with || as line break delimiter
+  private async promptLong(question: string, defaultValue: string = '', hint: string = ''): Promise<string> {
+    const defaultDisplay = defaultValue
+      ? defaultValue.length > 60
+        ? defaultValue.substring(0, 57) + '...'
+        : defaultValue
+      : '';
+    const hintText = hint || `${colors.dim}(use || for line breaks)${colors.reset}`;
+
+    console.log(`\n${question} ${hintText}`);
+    if (defaultDisplay) {
+      console.log(`  ${colors.dim}Current: ${defaultDisplay}${colors.reset}`);
+    }
+
+    return new Promise((resolve) => {
+      this.rl.question(`  > `, (answer) => {
+        const value = answer.trim() || defaultValue;
+        // Convert || to actual newlines
+        resolve(value.replace(/\|\|/g, '\n'));
+      });
+    });
+  }
+
   private async promptYesNo(question: string, defaultYes: boolean = true): Promise<boolean> {
     const hint = defaultYes ? '[Y/n]' : '[y/N]';
     const answer = await this.prompt(`${question} ${hint}`, '');
@@ -332,6 +355,31 @@ class SetupWizard {
     return await this.prompt(`${label}${confStr}\n  ${colors.green}→${colors.reset} [${display}]`, current);
   }
 
+  // Confirm extracted value for longer text (with || delimiter support)
+  private async confirmValueLong(
+    label: string,
+    value: string,
+    confidence: number = 0,
+    placeholder: string = ''
+  ): Promise<string> {
+    const confStr = confidence > 0 ? ` ${colors.dim}(${Math.round(confidence * 100)}% confident)${colors.reset}` : '';
+    const current = value || placeholder;
+    const display = current.length > 60 ? current.substring(0, 57) + '...' : current;
+
+    console.log(`\n${label}${confStr} ${colors.dim}(use || for line breaks)${colors.reset}`);
+    if (current) {
+      console.log(`  ${colors.green}→${colors.reset} [${display}]`);
+    }
+
+    return new Promise((resolve) => {
+      this.rl.question(`  > `, (answer) => {
+        const result = answer.trim() || current;
+        // Convert || to actual newlines
+        resolve(result.replace(/\|\|/g, '\n'));
+      });
+    });
+  }
+
   // Review and confirm extracted data
   private async reviewExtractedData(
     extracted: { data: Partial<SetupData>; confidence: Record<string, number> }
@@ -357,7 +405,7 @@ class SetupWizard {
       defaults.business.tagline
     );
 
-    this.data.business.description = await this.confirmValue(
+    this.data.business.description = await this.confirmValueLong(
       'Description',
       data.business?.description || '',
       confidence.description,
@@ -464,8 +512,8 @@ class SetupWizard {
     this.data.business.name = await this.prompt('Business name', this.data.business.name);
     this.data.business.legalName = await this.prompt('Legal name (for contracts)', this.data.business.name);
     this.data.business.tagline = await this.prompt('Tagline/slogan', this.data.business.tagline);
-    this.data.business.description = await this.prompt(
-      'Business description (1-2 sentences)',
+    this.data.business.description = await this.promptLong(
+      'Business description',
       this.data.business.description || `${this.data.business.name} provides professional services and solutions.`
     );
 
