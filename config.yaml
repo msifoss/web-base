@@ -1,0 +1,312 @@
+# =============================================================================
+# ASTRO SMB MINIMAL - Site Configuration
+# =============================================================================
+# This is the single source of truth for your site settings.
+# Run `npm run setup` to interactively configure these values.
+# =============================================================================
+
+# =============================================================================
+# BUSINESS IDENTITY
+# =============================================================================
+business:
+  name: "Acme Corp"
+  legal_name: "Acme Corporation LLC"              # For legal pages, contracts
+  tagline: "Quality Solutions for Your Business"
+  description: "Acme Corp provides professional services and solutions. Contact us today to learn how we can help your business grow."
+  year_founded: 2020                              # Auto-calculates "X years in business"
+  industry: "general"                             # general, plumbing, hvac, electrical, landscaping, etc.
+
+# =============================================================================
+# SITE & DOMAIN
+# =============================================================================
+site:
+  url: "https://acme.com"
+  locale: "en-US"
+  timezone: "America/New_York"
+  default_og_image: "/images/og-image.png"
+
+# =============================================================================
+# CONTACT INFORMATION
+# =============================================================================
+contact:
+  email: "hello@acme.com"
+  phone: "(555) 555-0100"                         # Formatted for display
+  phone_raw: "+15555550100"                       # E.164 format for tel: links
+  address:
+    street: "123 Main Street"
+    suite: ""                                     # Optional: Suite 100, Unit B, etc.
+    city: "Springfield"
+    state: "ST"
+    zip: "12345"
+    country: "USA"
+  service_area: "Greater Springfield Area"        # For local SEO
+
+# =============================================================================
+# BUSINESS HOURS
+# =============================================================================
+hours:
+  display: "Mon-Fri: 9AM-5PM"                     # Simple display format
+  detailed:
+    monday: "9:00 AM - 5:00 PM"
+    tuesday: "9:00 AM - 5:00 PM"
+    wednesday: "9:00 AM - 5:00 PM"
+    thursday: "9:00 AM - 5:00 PM"
+    friday: "9:00 AM - 5:00 PM"
+    saturday: "Closed"
+    sunday: "Closed"
+  # Structured format for JSON-LD schema markup
+  structured:
+    - days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
+      open: "09:00"
+      close: "17:00"
+
+# =============================================================================
+# BRANDING & DESIGN
+# =============================================================================
+branding:
+  colors:
+    primary: "#2563eb"                            # Main brand color (buttons, links)
+    primary_dark: "#1e40af"                       # Darker variant (hover states)
+    secondary: "#64748b"                          # Secondary elements
+    accent: "#f59e0b"                             # Accent/highlight color
+    text: "#1f2937"                               # Main text color
+    text_light: "#6b7280"                         # Muted text
+    background: "#ffffff"                         # Page background
+    surface: "#f9fafb"                            # Card/section backgrounds
+  fonts:
+    heading: "Inter"                              # Options: Inter, Montserrat, Poppins, Roboto
+    body: "Inter"
+  style: "modern"                                 # modern, classic, playful, minimal
+  logo:
+    text: ""                                      # If empty, uses business.name
+    show_icon: true                               # Show icon next to logo text
+
+# =============================================================================
+# SOCIAL MEDIA & PROFILES
+# =============================================================================
+# Leave empty ("") for platforms you don't use
+social:
+  facebook: "https://www.facebook.com/acmecorp"
+  instagram: "https://www.instagram.com/acmecorp"
+  twitter: ""
+  linkedin: "https://www.linkedin.com/company/acmecorp"
+  youtube: ""
+  tiktok: ""
+  pinterest: ""
+  yelp: ""
+  google_business: ""                             # Google Business Profile URL
+  nextdoor: ""
+  bbb: ""                                         # Better Business Bureau profile
+  whatsapp: ""                                    # WhatsApp number with country code
+
+# =============================================================================
+# TRUST & CREDIBILITY SIGNALS
+# =============================================================================
+trust:
+  show_years_in_business: true                    # Display "X years in business"
+  customers_served: ""                            # e.g., "500+" or "10,000+"
+  satisfaction_rate: ""                           # e.g., "99%" or "4.9/5 stars"
+  response_time: ""                               # e.g., "Same-day response"
+  certifications:                                 # Professional certifications
+    - ""                                          # e.g., "Licensed & Insured"
+  awards: []                                      # e.g., ["Best of 2024", "Top Rated"]
+  affiliations: []                                # e.g., ["BBB A+", "Chamber of Commerce"]
+  guarantees: []                                  # e.g., ["100% Satisfaction Guarantee", "Free Estimates"]
+
+# =============================================================================
+# CALLS TO ACTION
+# =============================================================================
+cta:
+  primary:
+    text: "Get Started"                           # Main CTA button text
+    url: "/contact"                               # Destination URL or tel:+1... or mailto:
+  secondary:
+    text: "Call Now"
+    url: "tel:+15555550100"
+  # Optional urgency message (leave empty to hide)
+  urgency: ""                                     # e.g., "Limited spots available!" or "Book today - 10% off"
+
+# =============================================================================
+# SERVICES (for service-based businesses)
+# =============================================================================
+services:
+  enabled: true
+  headline: "Our Services"
+  subheadline: "What we can do for you"
+  items:
+    - name: "Service One"
+      description: "Brief description of this service and the value it provides."
+      icon: "wrench"                              # Icon name (see docs for options)
+      url: ""                                     # Optional link to service page
+    - name: "Service Two"
+      description: "Brief description of this service and the value it provides."
+      icon: "shield"
+      url: ""
+    - name: "Service Three"
+      description: "Brief description of this service and the value it provides."
+      icon: "clock"
+      url: ""
+
+# =============================================================================
+# VALUE PROPOSITIONS / WHY CHOOSE US
+# =============================================================================
+value_props:
+  enabled: true
+  headline: "Why Choose Us"
+  items:
+    - title: "Experienced Team"
+      description: "Years of expertise you can count on"
+      icon: "users"
+    - title: "Quality Work"
+      description: "We stand behind everything we do"
+      icon: "badge-check"
+    - title: "Fair Pricing"
+      description: "Transparent quotes with no hidden fees"
+      icon: "currency-dollar"
+
+# =============================================================================
+# NAVIGATION
+# =============================================================================
+navigation:
+  # Main navigation (header)
+  main:
+    - name: "Home"
+      href: "/"
+    - name: "About"
+      href: "/about"
+    - name: "Blog"
+      href: "/blog"
+    - name: "Contact"
+      href: "/contact"
+
+  # Footer links
+  footer:
+    quick_links:
+      - name: "Home"
+        href: "/"
+      - name: "About Us"
+        href: "/about"
+      - name: "Blog"
+        href: "/blog"
+      - name: "Contact"
+        href: "/contact"
+    legal:
+      - name: "Privacy Policy"
+        href: "/privacy"
+      - name: "Terms of Service"
+        href: "/terms"
+
+# =============================================================================
+# FEATURES & MODULES
+# =============================================================================
+# Enable or disable site features
+features:
+  blog: true
+  contact_form: true
+  reviews: true
+  services_section: true
+  newsletter: false                               # Email newsletter signup
+  chat: false                                     # Live chat widget (future)
+  booking: false                                  # Calendar booking (future)
+
+# =============================================================================
+# SEO & ANALYTICS
+# =============================================================================
+seo:
+  title_template: "%s | Acme Corp"                # Page title format (%s = page title)
+  default_title: "Acme Corp - Quality Solutions"  # Fallback title
+  default_description: ""                         # Fallback meta description (uses business.description if empty)
+  keywords: []                                    # Focus keywords for SEO
+
+analytics:
+  google_analytics:
+    enabled: false
+    measurement_id: ""                            # e.g., "G-XXXXXXXXXX"
+  google_tag_manager:
+    enabled: false
+    container_id: ""                              # e.g., "GTM-XXXXXXX"
+  google_site_verification: ""                    # Google Search Console verification code
+
+# =============================================================================
+# CONTACT FORM SETTINGS
+# =============================================================================
+contact_form:
+  recipient_email: "hello@acme.com"               # Where form submissions are sent
+  subject_prefix: "[Website Contact]"             # Email subject prefix
+  success_message: "Thank you! We'll be in touch soon."
+  fields:
+    - name: "name"
+      label: "Your Name"
+      type: "text"
+      required: true
+    - name: "email"
+      label: "Email Address"
+      type: "email"
+      required: true
+    - name: "phone"
+      label: "Phone Number"
+      type: "tel"
+      required: false
+    - name: "message"
+      label: "Message"
+      type: "textarea"
+      required: true
+
+# =============================================================================
+# EMAIL SENDING (Resend API)
+# =============================================================================
+# Sign up at https://resend.com (free: 3,000 emails/month)
+# Store your API key in .env or config.local.yaml (not committed to git)
+email:
+  provider: "resend"
+  resend_api_key: ""                              # Set in .env: RESEND_API_KEY=re_xxxxx
+  from_email: "Acme Corp <noreply@acme.com>"
+  reply_to: "hello@acme.com"
+
+# =============================================================================
+# ADMIN PANEL SETTINGS
+# =============================================================================
+admin:
+  # Secret URL path for admin access
+  # Access via: /api/admin.php?key=your-secret-here
+  # IMPORTANT: Change this to something unique and hard to guess!
+  secret_path: "change-this-secret-key"
+  per_page: 50                                    # Items per page in admin
+
+# =============================================================================
+# SECURITY SETTINGS
+# =============================================================================
+security:
+  honeypot_field: "website_url"                   # Hidden field name for bot detection
+  rate_limit: 10                                  # Max submissions per IP per hour
+
+# =============================================================================
+# LOGGING SETTINGS
+# =============================================================================
+logging:
+  submissions_file: "data/submissions.json"
+  max_size_mb: 10
+
+# =============================================================================
+# REVIEWS / TESTIMONIALS
+# =============================================================================
+# Configure which pages display reviews and how
+reviews:
+  enabled: true
+  # Pages where reviews should appear
+  pages:
+    - path: "/"
+      layout: "featured"                          # featured, standard, compact, carousel
+      position: "before-cta"                      # before-cta, after-cta, after-hero
+      max_reviews: 3
+  # Tag specific reviews to specific pages (by review ID)
+  tagged: {}
+
+# =============================================================================
+# LEGAL
+# =============================================================================
+legal:
+  copyright_holder: ""                            # If empty, uses business.name
+  privacy_email: "privacy@acme.com"               # Contact for privacy inquiries
+  terms_last_updated: "2024-01-01"
+  privacy_last_updated: "2024-01-01"

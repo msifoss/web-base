@@ -1,0 +1,91 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { siteConfig } from '../config/site';
+---
+
+<Layout
+  title="Terms and Conditions"
+  description={`Terms and conditions for ${siteConfig.name} services.`}
+>
+  <section class="bg-gradient-to-br from-gray-900 via-gray-800 to-primary-900 py-16">
+    <div class="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+      <h1 class="text-4xl font-bold tracking-tight text-white">Terms and Conditions</h1>
+      <p class="mt-4 text-lg text-gray-300">Last updated: January 2025</p>
+    </div>
+  </section>
+
+  <section class="py-16">
+    <div class="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+      <div class="prose prose-lg max-w-none">
+        <p class="lead text-xl text-gray-600">
+          Welcome to {siteConfig.name}. By using our services, you agree to the following terms and conditions.
+        </p>
+
+        <h2 class="text-2xl font-bold text-gray-900 mt-12 mb-4">Services</h2>
+        <p class="text-gray-700">
+          All services provided by {siteConfig.name} are subject to availability and the terms outlined in your specific agreement. We reserve the right to modify our services at any time.
+        </p>
+
+        <h2 class="text-2xl font-bold text-gray-900 mt-12 mb-4">Payment Terms</h2>
+        <p class="text-gray-700">
+          Payments are due as specified in your invoice or agreement. Late payments may be subject to additional charges. All prices are in the currency specified at time of purchase.
+        </p>
+
+        <h2 class="text-2xl font-bold text-gray-900 mt-12 mb-4">Use of Services</h2>
+        <p class="text-gray-700">
+          Our services must be used in accordance with applicable laws and regulations. You agree not to:
+        </p>
+        <ul class="list-disc list-inside text-gray-700 space-y-2 mt-4">
+          <li>Use our services for any unlawful purpose</li>
+          <li>Misrepresent your identity or affiliation</li>
+          <li>Interfere with or disrupt our services</li>
+          <li>Attempt to gain unauthorized access to our systems</li>
+        </ul>
+
+        <h2 class="text-2xl font-bold text-gray-900 mt-12 mb-4">Intellectual Property</h2>
+        <p class="text-gray-700">
+          All content on this website, including text, graphics, logos, and images, is the property of {siteConfig.name} or its licensors and is protected by copyright and trademark laws.
+        </p>
+
+        <h2 class="text-2xl font-bold text-gray-900 mt-12 mb-4">Limitation of Liability</h2>
+        <p class="text-gray-700">
+          {siteConfig.name} shall not be liable for any indirect, incidental, special, consequential, or punitive damages resulting from your use of our services. Our liability is limited to the amount paid for the specific service in question.
+        </p>
+
+        <h2 class="text-2xl font-bold text-gray-900 mt-12 mb-4">Warranties</h2>
+        <p class="text-gray-700">
+          We provide our services "as is" without any warranty, express or implied. We do not guarantee that our services will be uninterrupted, error-free, or meet your specific requirements.
+        </p>
+
+        <h2 class="text-2xl font-bold text-gray-900 mt-12 mb-4">Termination</h2>
+        <p class="text-gray-700">
+          We reserve the right to terminate or suspend services if these terms are violated, including but not limited to:
+        </p>
+        <ul class="list-disc list-inside text-gray-700 space-y-2 mt-4">
+          <li>Failure to make payments</li>
+          <li>Violation of any term in this agreement</li>
+          <li>Conduct that we determine is harmful to our business or other customers</li>
+        </ul>
+
+        <h2 class="text-2xl font-bold text-gray-900 mt-12 mb-4">Changes to Terms</h2>
+        <p class="text-gray-700">
+          We may update these terms and conditions at any time. Continued use of our services after changes are posted constitutes acceptance of the modified terms.
+        </p>
+
+        <h2 class="text-2xl font-bold text-gray-900 mt-12 mb-4">Contact Us</h2>
+        <p class="text-gray-700">
+          If you have questions about these terms, please contact us:
+        </p>
+        <div class="mt-4 p-6 bg-gray-50 rounded-lg">
+          <p class="font-semibold text-gray-900">{siteConfig.name}</p>
+          <p class="text-gray-700">
+            {siteConfig.contact.address.street}<br />
+            {siteConfig.contact.address.city}, {siteConfig.contact.address.state} {siteConfig.contact.address.zip}
+          </p>
+          <p class="text-gray-700">Phone: {siteConfig.contact.phone}</p>
+          <p class="text-gray-700">Email: {siteConfig.contact.email}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>

@@ -1,0 +1,177 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Hero from '../components/Hero.astro';
+import Section from '../components/Section.astro';
+import FeatureGrid from '../components/FeatureGrid.astro';
+import CTA from '../components/CTA.astro';
+import { siteConfig } from '../config/site';
+
+// Company values
+const values = [
+  {
+    title: 'Quality',
+    description: 'We deliver excellence in everything we do.',
+    icon: `<svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" /></svg>`,
+  },
+  {
+    title: 'Integrity',
+    description: 'Honest and transparent in all our dealings.',
+    icon: `<svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" /></svg>`,
+  },
+  {
+    title: 'Service',
+    description: 'Customer satisfaction is our top priority.',
+    icon: `<svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.182 15.182a4.5 4.5 0 01-6.364 0M21 12a9 9 0 11-18 0 9 9 0 0118 0zM9.75 9.75c0 .414-.168.75-.375.75S9 10.164 9 9.75 9.168 9 9.375 9s.375.336.375.75zm-.375 0h.008v.015h-.008V9.75zm5.625 0c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75zm-.375 0h.008v.015h-.008V9.75z" /></svg>`,
+  },
+  {
+    title: 'Innovation',
+    description: 'Always finding better ways to serve you.',
+    icon: `<svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 18v-5.25m0 0a6.01 6.01 0 001.5-.189m-1.5.189a6.01 6.01 0 01-1.5-.189m3.75 7.478a12.06 12.06 0 01-4.5 0m3.75 2.383a14.406 14.406 0 01-3 0M14.25 18v-.192c0-.983.658-1.823 1.508-2.316a7.5 7.5 0 10-7.517 0c.85.493 1.509 1.333 1.509 2.316V18" /></svg>`,
+  },
+];
+---
+
+<Layout
+  title="About Us"
+  description={`Learn about ${siteConfig.name}. ${siteConfig.tagline}`}
+>
+  <!-- Hero -->
+  <Hero
+    title={`About ${siteConfig.name}`}
+    subtitle={siteConfig.tagline}
+    size="md"
+    centered
+  />
+
+  <!-- Our Story Section -->
+  <Section title="Who We Are">
+    <div class="mx-auto max-w-3xl">
+      <div class="prose prose-lg prose-gray mx-auto">
+        <p>
+          {siteConfig.name} was founded with a simple mission: to provide exceptional
+          service and quality solutions to our customers. We believe in building lasting
+          relationships through honest, reliable work.
+        </p>
+        <p>
+          Our experienced team brings together years of industry expertise with a passion
+          for excellence. Whether you're a small business or a large enterprise, we have
+          solutions tailored to your specific needs.
+        </p>
+        <p>
+          Based in {siteConfig.contact.address.city}, we're proud to serve our local
+          community and beyond. Our commitment to quality and customer satisfaction has
+          earned us a reputation as a partner you can trust.
+        </p>
+      </div>
+    </div>
+  </Section>
+
+  <!-- Mission & Values Section -->
+  <Section
+    title="What We Stand For"
+    subtitle="The principles that guide our work."
+    background="gray"
+  >
+    <FeatureGrid features={values} columns={4} />
+  </Section>
+
+  <!-- Stats Overview -->
+  <Section background="primary">
+    <div class="grid gap-8 text-center sm:grid-cols-3">
+      <div>
+        <div class="text-4xl font-bold text-white">500+</div>
+        <div class="mt-2 text-primary-100">Happy Customers</div>
+      </div>
+      <div>
+        <div class="text-4xl font-bold text-white">10+</div>
+        <div class="mt-2 text-primary-100">Years Experience</div>
+      </div>
+      <div>
+        <div class="text-4xl font-bold text-white">100%</div>
+        <div class="mt-2 text-primary-100">Satisfaction Guaranteed</div>
+      </div>
+    </div>
+  </Section>
+
+  <!-- Why Choose Us -->
+  <Section
+    title="Why Choose Us?"
+    subtitle="What sets us apart from the rest."
+  >
+    <div class="mx-auto max-w-3xl">
+      <div class="grid gap-6 sm:grid-cols-3">
+        <div class="text-center rounded-lg bg-gray-50 p-6">
+          <svg class="mx-auto h-10 w-10 text-primary-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <h3 class="mt-3 font-semibold text-gray-900">Expert Team</h3>
+          <p class="mt-1 text-sm text-gray-600">Experienced professionals</p>
+        </div>
+        <div class="text-center rounded-lg bg-gray-50 p-6">
+          <svg class="mx-auto h-10 w-10 text-primary-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <h3 class="mt-3 font-semibold text-gray-900">Fast Response</h3>
+          <p class="mt-1 text-sm text-gray-600">Quick turnaround times</p>
+        </div>
+        <div class="text-center rounded-lg bg-gray-50 p-6">
+          <svg class="mx-auto h-10 w-10 text-primary-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <h3 class="mt-3 font-semibold text-gray-900">Fair Pricing</h3>
+          <p class="mt-1 text-sm text-gray-600">Competitive rates</p>
+        </div>
+      </div>
+    </div>
+  </Section>
+
+  <!-- Location Section -->
+  <Section
+    title="Visit Us"
+    subtitle="We'd love to hear from you."
+    background="gray"
+  >
+    <div class="mx-auto max-w-2xl text-center">
+      <div class="rounded-lg bg-white p-6 shadow-sm">
+        <div class="flex items-center justify-center gap-2 text-lg font-medium text-gray-900">
+          <svg class="h-5 w-5 text-primary-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+          </svg>
+          {siteConfig.contact.address.street}
+        </div>
+        <p class="mt-1 text-gray-600">
+          {siteConfig.contact.address.city}, {siteConfig.contact.address.state} {siteConfig.contact.address.zip}
+        </p>
+        <div class="mt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
+          <a
+            href={`tel:${siteConfig.contact.phone.replace(/\D/g, '')}`}
+            class="inline-flex items-center gap-2 text-primary-600 hover:text-primary-700"
+          >
+            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
+            </svg>
+            {siteConfig.contact.phone}
+          </a>
+          <a
+            href={`mailto:${siteConfig.contact.email}`}
+            class="inline-flex items-center gap-2 text-primary-600 hover:text-primary-700"
+          >
+            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+            </svg>
+            {siteConfig.contact.email}
+          </a>
+        </div>
+      </div>
+    </div>
+  </Section>
+
+  <!-- CTA -->
+  <CTA
+    title="Ready to Get Started?"
+    description="Contact us today to learn how we can help."
+    primaryButton={{ text: "Contact Us", href: "/contact" }}
+    variant="gray"
+  />
+</Layout>
