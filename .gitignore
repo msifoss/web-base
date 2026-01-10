@@ -49,3 +49,4 @@ config.local.yaml
 # Empty placeholder directories
 public/videos/
 src/verticals/
+demo_extract.json
