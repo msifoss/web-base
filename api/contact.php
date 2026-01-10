@@ -1,6 +1,6 @@
 <?php
 /**
- * C-Can Sam Contact Form Handler
+ * Contact Form Handler
  *
  * Handles form submissions:
  * - Validates input
@@ -62,8 +62,8 @@ function parseSimpleYaml($path) {
     $content = file_get_contents($path);
     $config = [
         'contact_form' => [
-            'recipient_email' => 'ccansam22@gmail.com',
-            'subject_prefix' => '[C-Can Sam Contact]'
+            'recipient_email' => 'hello@acme.com',
+            'subject_prefix' => '[Website Contact]'
         ],
         'logging' => [
             'submissions_file' => 'data/submissions.json'
@@ -165,7 +165,7 @@ $submission = [
 if ($formType === 'quote') {
     // Quote form fields
     $submission['name'] = htmlspecialchars(trim($data['name']), ENT_QUOTES, 'UTF-8');
-    $submission['containerSize'] = htmlspecialchars(trim($data['containerSize'] ?? ''), ENT_QUOTES, 'UTF-8');
+    $submission['serviceType'] = htmlspecialchars(trim($data['serviceType'] ?? ''), ENT_QUOTES, 'UTF-8');
     $submission['condition'] = htmlspecialchars(trim($data['condition'] ?? ''), ENT_QUOTES, 'UTF-8');
     $submission['intention'] = htmlspecialchars(trim($data['intention'] ?? ''), ENT_QUOTES, 'UTF-8');
     $submission['delivery'] = htmlspecialchars(trim($data['delivery'] ?? ''), ENT_QUOTES, 'UTF-8');
@@ -210,10 +210,10 @@ if (file_put_contents($logFile, json_encode($submissions, JSON_PRETTY_PRINT)) ==
 }
 
 // Send email notification
-$recipientEmail = $config['contact_form']['recipient_email'] ?? 'ccansam22@gmail.com';
+$recipientEmail = $config['contact_form']['recipient_email'] ?? 'hello@acme.com';
 $subjectPrefix = $config['contact_form']['subject_prefix'] ?? '[Contact Form]';
 $resendApiKey = $config['email']['resend_api_key'] ?? '';
-$fromEmail = $config['email']['from_email'] ?? 'noreply@ccansam.com';
+$fromEmail = $config['email']['from_email'] ?? 'noreply@acme.com';
 
 if ($formType === 'quote') {
     $emailSubject = $subjectPrefix . ' Quote Request from ' . $submission['name'];
@@ -223,8 +223,8 @@ if ($formType === 'quote') {
     $emailBody .= "Email: {$submission['email']}\n";
     $emailBody .= "Phone: {$submission['phone']}\n";
     $emailBody .= "Date: {$submission['date']} at {$submission['time']}\n";
-    $emailBody .= "\n--- Container Details ---\n\n";
-    $emailBody .= "Container Size: {$submission['containerSize']}\n";
+    $emailBody .= "\n--- Service Details ---\n\n";
+    $emailBody .= "Service Type: {$submission['serviceType']}\n";
     $emailBody .= "Condition: {$submission['condition']}\n";
     $emailBody .= "Intention: {$submission['intention']}\n";
     $emailBody .= "Delivery: {$submission['delivery']}\n";

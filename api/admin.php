@@ -1,8 +1,8 @@
 <?php
 /**
- * C-Can Sam Admin Panel
+ * Admin Panel
  *
- * View contact form submissions and Google reviews
+ * View contact form submissions and reviews
  * Access via: /api/admin.php?key=YOUR_SECRET_PATH
  */
 
@@ -18,7 +18,7 @@ if (file_exists($configPath)) {
     } else {
         // Simple parser
         $content = file_get_contents($configPath);
-        $config = ['admin' => ['secret_path' => 'ccan-admin-2024', 'per_page' => 50]];
+        $config = ['admin' => ['secret_path' => 'change-this-secret-key', 'per_page' => 50]];
         if (preg_match('/secret_path:\s*["\']?([^"\'\n]+)["\']?/', $content, $matches)) {
             $config['admin']['secret_path'] = trim($matches[1]);
         }
@@ -47,7 +47,7 @@ if (file_exists($localConfigPath)) {
     }
 }
 
-$secretPath = $config['admin']['secret_path'] ?? 'ccan-admin-2024';
+$secretPath = $config['admin']['secret_path'] ?? 'change-this-secret-key';
 $perPage = $config['admin']['per_page'] ?? 100;
 $logFile = dirname(__DIR__) . '/' . ($config['logging']['submissions_file'] ?? 'data/submissions.json');
 
@@ -92,7 +92,7 @@ if (isset($_GET['export']) && $_GET['export'] === 'csv') {
     $output = fopen('php://output', 'w');
     fputcsv($output, [
         'ID', 'Form Type', 'Date', 'Time', 'Name', 'Email', 'Phone',
-        'Container Size', 'Condition', 'Intention', 'Delivery',
+        'Service Type', 'Condition', 'Intention', 'Delivery',
         'Location Type', 'Street Address', 'City', 'Postal Code',
         'Land Location', 'Additional Directions',
         'Subject', 'Message', 'IP'
@@ -107,7 +107,7 @@ if (isset($_GET['export']) && $_GET['export'] === 'csv') {
             getDisplayName($sub),
             $sub['email'],
             $sub['phone'] ?? '',
-            $sub['containerSize'] ?? '',
+            $sub['serviceType'] ?? '',
             $sub['condition'] ?? '',
             $sub['intention'] ?? '',
             $sub['delivery'] ?? '',
@@ -218,7 +218,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel - C-Can Sam</title>
+    <title>Admin Panel</title>
     <meta name="robots" content="noindex, nofollow">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -511,7 +511,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 </head>
 <body>
     <div class="container">
-        <h1>C-Can Sam Admin</h1>
+        <h1>Site Admin</h1>
         <p class="subtitle">Manage submissions and reviews</p>
 
         <?php if (isset($_GET['deleted'])): ?>
@@ -795,7 +795,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
                 <div style="background: white; padding: 1.5rem; border-radius: 0.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-                        <h3 style="font-size: 1rem; font-weight: 600;">Container Products</h3>
+                        <h3 style="font-size: 1rem; font-weight: 600;">Products</h3>
                         <button type="submit" class="btn btn-primary">Save Changes</button>
                     </div>
 
@@ -839,8 +839,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                                             </div>
                                         </td>
                                         <td style="padding: 0.75rem 1rem;">
-                                            <a href="/containers/<?= htmlspecialchars($product['slug'] ?? '') ?>" target="_blank" style="color: #d97706; font-size: 0.75rem;">
-                                                /containers/<?= htmlspecialchars($product['slug'] ?? '') ?>
+                                            <a href="/products/<?= htmlspecialchars($product['slug'] ?? '') ?>" target="_blank" style="color: #d97706; font-size: 0.75rem;">
+                                                /products/<?= htmlspecialchars($product['slug'] ?? '') ?>
                                             </a>
                                         </td>
                                     </tr>
@@ -867,7 +867,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
                     <a href="https://search.google.com/test/rich-results?url=<?= urlencode($config['site']['url'] ?? 'https://acme.com') ?>" target="_blank" rel="noopener" class="btn btn-secondary" style="font-size: 0.75rem; padding: 0.375rem 0.75rem;">Test Homepage</a>
                     <?php foreach ($productsConfig as $product): ?>
-                        <a href="https://search.google.com/test/rich-results?url=<?= urlencode(($config['site']['url'] ?? 'https://acme.com') . '/containers/' . ($product['slug'] ?? '')) ?>" target="_blank" rel="noopener" class="btn btn-secondary" style="font-size: 0.75rem; padding: 0.375rem 0.75rem;">Test <?= htmlspecialchars($product['size'] ?? '') ?></a>
+                        <a href="https://search.google.com/test/rich-results?url=<?= urlencode(($config['site']['url'] ?? 'https://acme.com') . '/products/' . ($product['slug'] ?? '')) ?>" target="_blank" rel="noopener" class="btn btn-secondary" style="font-size: 0.75rem; padding: 0.375rem 0.75rem;">Test <?= htmlspecialchars($product['size'] ?? '') ?></a>
                     <?php endforeach; ?>
                 </div>
             </div>
@@ -942,7 +942,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                         sub.email || '',
                         sub.phone || '',
                         sub.message || '',
-                        sub.containerSize || '',
+                        sub.serviceType || '',
                         sub.city || '',
                         sub.subject || ''
                     ].join(' ').toLowerCase();
@@ -971,7 +971,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 const isQuote = formType === 'quote';
                 const displayName = getDisplayName(sub);
                 const preview = isQuote
-                    ? [sub.containerSize, sub.condition, sub.intention].filter(Boolean).join(' · ')
+                    ? [sub.serviceType, sub.condition, sub.intention].filter(Boolean).join(' · ')
                     : (sub.subject || 'General Inquiry');
 
                 let detailsHtml = `
@@ -996,8 +996,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 if (isQuote) {
                     detailsHtml += `
                         <div class="detail-item">
-                            <div class="detail-label">Container Size</div>
-                            <div class="detail-value">${escapeHtml(sub.containerSize || '')}</div>
+                            <div class="detail-label">Service Type</div>
+                            <div class="detail-value">${escapeHtml(sub.serviceType || '')}</div>
                         </div>
                         <div class="detail-item">
                             <div class="detail-label">Condition</div>
@@ -1258,8 +1258,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                     responseHtml = `
                         <div class="review-response">
                             <div class="review-response-header">
-                                <img src="/favicon-32.png" alt="C-Can Sam" class="review-response-avatar" />
-                                <span>C-Can Sam (Owner)</span>
+                                <img src="/favicon-32.png" alt="Business" class="review-response-avatar" />
+                                <span>Business Owner</span>
                             </div>
                             <div class="review-response-text">${escapeHtml(review.ownerResponse.text)}</div>
                         </div>

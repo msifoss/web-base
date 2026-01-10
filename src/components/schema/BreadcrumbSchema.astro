@@ -22,25 +22,14 @@ const pathname = Astro.url.pathname;
 const pathSegments = pathname.split('/').filter(Boolean);
 
 // Map of path segments to human-readable names
+// Add your site-specific paths here
 const pathNames: Record<string, string> = {
-  'containers': 'Containers',
   'blog': 'Blog',
-  'storage-containers-for-sale': 'Buy Containers',
-  'storage-container-rentals': 'Rent Containers',
-  'storage-container-leasing': 'Lease Containers',
-  'on-site-storage-rentals': 'On-Site Storage',
-  'storage-container-sales-and-rentals': 'Our Containers',
-  'shipping-containers': 'Shipping Containers',
-  '20ft-standard': '20ft Standard',
-  '40ft-standard': '40ft Standard',
-  '40ft-high-cube': '40ft High Cube',
-  '9ft-mini': '9ft Mini',
   'about': 'About',
   'contact': 'Contact',
-  'referrals': 'Referral Program',
+  'services': 'Services',
   'privacy': 'Privacy Policy',
   'terms': 'Terms & Conditions',
-  'inventory-checker': 'Check Inventory',
 };
 
 // Generate breadcrumb items from URL or use provided items
