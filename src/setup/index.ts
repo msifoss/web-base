@@ -843,6 +843,8 @@ Have questions? We'd love to hear from you! [Contact us](/contact) today.
         const extracted = await this.extractFromWebsite(existingUrl);
         if (extracted) {
           usedExtraction = true;
+          // Use the source URL as the default domain for the new site
+          this.data.site.url = existingUrl.startsWith('http') ? existingUrl : `https://${existingUrl}`;
           // Review and confirm extracted data with override options
           await this.reviewExtractedData(extracted);
         }
